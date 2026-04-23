@@ -1,18 +1,23 @@
+
 /* src/app/globals.css */
 
+/* Tailwind layers */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ✅ FIXED Google Font Import (must be complete) */
+/* ✅ Google Font (FIXED + COMPLETE) */
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
 
+/* Base reset */
 * {
   box-sizing: border-box;
 }
 
 body {
   font-family: 'Plus Jakarta Sans', sans-serif;
+  background: #0f172a;
+  color: #e2e8f0;
 }
 
 /* Scrollbar styling */
@@ -34,12 +39,11 @@ body {
   background: #475569;
 }
 
-/* Custom card */
+/* Cards */
 .crm-card {
   @apply bg-slate-900 border border-slate-800 rounded-xl p-5;
 }
 
-/* Stat card */
 .stat-card {
   @apply bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col gap-1;
 }
@@ -90,13 +94,13 @@ body {
   @apply bg-slate-800 text-slate-400 border border-slate-700;
 }
 
-/* Input */
+/* Inputs */
 .crm-input {
   @apply bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-100 placeholder-slate-500
-    focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all w-full;
+  focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all w-full;
 }
 
-/* Button */
+/* Buttons */
 .btn-primary {
   @apply bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-4 py-2 rounded-lg text-sm transition-colors flex items-center gap-2 disabled:opacity-50;
 }
@@ -112,7 +116,7 @@ body {
 /* Select */
 .crm-select {
   @apply bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-100
-    focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all w-full;
+  focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition-all w-full;
 }
 
 /* Page header */
