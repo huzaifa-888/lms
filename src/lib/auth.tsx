@@ -1,4 +1,5 @@
 "use client";
+
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 
 export type UserRole = "superadmin" | "admin" | "salesperson";
@@ -10,6 +11,7 @@ export interface CRMUser {
   username: string;
   role: UserRole;
   status: UserStatus;
+  active?: boolean;
 }
 
 interface AuthContextType {
@@ -26,26 +28,10 @@ interface AuthContextType {
   approveUser: (id: string) => void;
   rejectUser: (id: string) => void;
   getAllUsers: () => any[];
+  toggleUserActive: (id: string) => any[];
 }
 
-/* ✅ fallback taake crash na ho */
-const defaultContext: AuthContextType = {
-  user: null,
-  login: () => ({ ok: false, error: "AuthProvider missing" }),
-  logout: () => {},
-  signup: () => ({ ok: false, error: "AuthProvider missing" }),
-  isAdmin: false,
-  isSuperAdmin: false,
-  isSalesPerson: false,
-  isIbrahimSetup: false,
-  setupIbrahim: () => {},
-  getPendingUsers: () => [],
-  approveUser: () => {},
-  rejectUser: () => {},
-  getAllUsers: () => [],
-};
-
-const AuthContext = createContext<AuthContextType>(defaultContext);
+const AuthContext = createContext<AuthContextType | null>(null);
 
 const IBRAHIM_KEY = "qh_ibrahim_pass";
 const USERS_KEY = "qh_users";
@@ -57,6 +43,7 @@ const IBRAHIM_DEFAULT = {
   username: "ibrahim",
   role: "superadmin" as UserRole,
   status: "approved" as UserStatus,
+  active: true,
 };
 
 function getUsers() {
@@ -129,6 +116,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       username: found.username,
       role: found.role,
       status: found.status,
+      active: found.active ?? true,
     };
 
     setUser(u);
@@ -158,6 +146,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       password,
       role,
       status: "pending",
+      active: true,
     });
 
     saveUsers(users);
@@ -182,6 +171,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const getAllUsers = () => getUsers();
 
+  const toggleUserActive = (id: string) => {
+    const users = getUsers();
+    const idx = users.findIndex((u: any) => u.id === id);
+
+    if (idx > -1) {
+      users[idx].active = users[idx].active === false ? true : false;
+    }
+
+    saveUsers(users);
+    return users;
+  };
+
   if (!mounted) return null;
 
   return (
@@ -200,6 +201,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         approveUser,
         rejectUser,
         getAllUsers,
+        toggleUserActive,
       }}
     >
       {children}
@@ -207,7 +209,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
-/* ✅ no crash */
 export function useAuth() {
-  return useContext(AuthContext);
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used inside AuthProvider");
+  return ctx;
 }
